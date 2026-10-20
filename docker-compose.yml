@@ -1,0 +1,15 @@
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: db_data_card
+    environment:
+      POSTGRES_DB: miDB
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
