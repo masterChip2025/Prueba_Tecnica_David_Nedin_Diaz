@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Persistent;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.Random;
@@ -39,7 +40,7 @@ public class Card {
     private LocalDateTime issuedAt;
 
     @Column(name = "expires_At", nullable = false)
-    private LocalDateTime expiresAt;
+    private LocalDate expiresAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
