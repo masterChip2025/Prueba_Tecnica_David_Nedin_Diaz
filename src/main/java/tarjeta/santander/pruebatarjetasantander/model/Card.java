@@ -32,10 +32,6 @@ public class Card {
     @Column(name="holder_name", nullable = false, length = 100)
     private String holderName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId", nullable = false)
-    private Product product;
-
     @Column(name = "issued_At", nullable = false, updatable = false)
     private LocalDateTime issuedAt;
 
@@ -57,6 +53,10 @@ public class Card {
 
     @Column(name = "currency", nullable = false, length = 3)
     private String currency="USD" ;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @PrePersist
     protected void onCreate(){
@@ -83,8 +83,4 @@ public class Card {
         }
         return sb.toString();
     }
-
-
-
-
 }

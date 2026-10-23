@@ -1,6 +1,6 @@
 package tarjeta.santander.pruebatarjetasantander.model;
 
-public enum typeTransaction {
+public enum TypeTransaction {
     DEBIT,
     CREDIT
 }

@@ -6,5 +6,5 @@ import tarjeta.santander.pruebatarjetasantander.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-    boolean existsByProduct(Integer productId);
+    boolean existsByProductId(Integer productId);
 }

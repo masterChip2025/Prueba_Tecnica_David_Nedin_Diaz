@@ -19,6 +19,7 @@ public class CardController {
 
     @PostMapping
     public ResponseEntity<CardResponseDTO> emitCard(@Valid @RequestBody CardRequestDTO request) {
+        System.out.println("Inicio Controller Crear Card ");
         CardResponseDTO response = cardService.emitCard(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
