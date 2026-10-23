@@ -27,7 +27,8 @@ public class CardService {
     public CardResponseDTO emitCard(CardRequestDTO request){
         System.out.println("Inicio Service Crear Card ");
         Product product = productRepository.findById(request.productId())
-                .orElseThrow(()-> new RuntimeException("Producto no encontrado con el Id especificado."));
+                .orElseThrow(()-> new tarjeta.santander.pruebatarjetasantander.exception.ResourceNotFoundException(
+                        "Producto no encontrado con el Id especificado."));
 
         Card card = new Card();
         card.setProduct(product);
