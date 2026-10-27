@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import tarjeta.santander.pruebatarjetasantander.dto.BlockRequestDTO;
 import tarjeta.santander.pruebatarjetasantander.dto.CardRequestDTO;
 import tarjeta.santander.pruebatarjetasantander.dto.CardResponseDTO;
+import tarjeta.santander.pruebatarjetasantander.dto.GetCardResponseDTO;
 import tarjeta.santander.pruebatarjetasantander.service.CardService;
 
 @RestController
@@ -19,7 +20,7 @@ public class CardController {
 
     @PostMapping
     public ResponseEntity<CardResponseDTO> emitCard(@Valid @RequestBody CardRequestDTO request) {
-        System.out.println("Inicio Controller Crear Card ");
+        //System.out.println("Inicio Controller Crear Card ");
         CardResponseDTO response = cardService.emitCard(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -39,8 +40,9 @@ public class CardController {
     }
 
     @GetMapping("/{cardId}")
-    public ResponseEntity<CardResponseDTO> getCard(@PathVariable Integer cardId) {
-        CardResponseDTO response = cardService.getCardById(cardId);
+    public ResponseEntity<GetCardResponseDTO> getCard(@PathVariable Integer cardId) {
+        GetCardResponseDTO response = cardService.getCardById(cardId);
+
         return ResponseEntity.ok(response);
     }
 }

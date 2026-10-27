@@ -1,10 +1,13 @@
 package tarjeta.santander.pruebatarjetasantander.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tarjeta.santander.pruebatarjetasantander.dto.CardRequestDTO;
 import tarjeta.santander.pruebatarjetasantander.dto.CardResponseDTO;
+import tarjeta.santander.pruebatarjetasantander.dto.GetCardResponseDTO;
 import tarjeta.santander.pruebatarjetasantander.model.Card;
 import tarjeta.santander.pruebatarjetasantander.model.CardStatus;
 import tarjeta.santander.pruebatarjetasantander.model.Product;
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class CardService {
 
     @Autowired
@@ -22,6 +26,9 @@ public class CardService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private final ModelMapper modelMapper;
 
     @Transactional
     public CardResponseDTO emitCard(CardRequestDTO request){
@@ -71,11 +78,12 @@ public class CardService {
         cardRepository.save(card);
     }
 
-    @Transactional()
-    public CardResponseDTO getCardById(Integer cardId) {
+    @Transactional
+    public GetCardResponseDTO getCardById(Integer cardId) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Tarjeta no encontrada"));
-        return mapToResponseDTO(card);
+                .orElseThrow(() -> new RuntimeException("Tarjeta no encontrada; Id: "+cardId));
+       return modelMapper.map(card, GetCardResponseDTO.class);
+
     }
 
     private String generateCardNumber(Integer productId) {
@@ -88,19 +96,6 @@ public class CardService {
         return prefix + sb.toString();
     }
 
-    /*private CardResponseDTO mapToResponseDTO(Card card) {
-        return new CardResponseDTO(
-                card.getCardId(),
-                card.getCardNumber(),
-                card.getHolderName(),
-                card.getStatus(),
-                card.getBlockedAt(),
-                card.getBlockedReason(),
-                card.getExpiresAt(),
-                card.getBalance(),
-                card.getCurrency()
-        );
-    }*/
     private CardResponseDTO mapToResponseDTO(Card card) {
         String expiresAtFormatted = card.getExpiresAt() != null
                 ? card.getExpiresAt().toString()
