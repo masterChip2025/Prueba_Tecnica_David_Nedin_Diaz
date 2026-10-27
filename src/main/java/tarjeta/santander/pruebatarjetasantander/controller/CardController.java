@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tarjeta.santander.pruebatarjetasantander.dto.BlockRequestDTO;
-import tarjeta.santander.pruebatarjetasantander.dto.CardRequestDTO;
-import tarjeta.santander.pruebatarjetasantander.dto.CardResponseDTO;
-import tarjeta.santander.pruebatarjetasantander.dto.GetCardResponseDTO;
+import tarjeta.santander.pruebatarjetasantander.dto.*;
 import tarjeta.santander.pruebatarjetasantander.service.CardService;
 
 @RestController
@@ -26,9 +23,10 @@ public class CardController {
     }
 
     @PostMapping("/{cardId}/activate")
-    public ResponseEntity<Void> activateCard(@PathVariable Integer cardId) {
-        cardService.activateCard(cardId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CardStatusResponseDTO> activateCard(@PathVariable Integer cardId) {
+        CardStatusResponseDTO response =
+                cardService.activateCard(cardId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{cardId}/block")

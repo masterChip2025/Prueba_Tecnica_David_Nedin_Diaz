@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tarjeta.santander.pruebatarjetasantander.exception.CardNotFoundException;
+import tarjeta.santander.pruebatarjetasantander.exception.InvalidCardStatusException;
 import tarjeta.santander.pruebatarjetasantander.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
@@ -46,5 +48,27 @@ public class GlobalExceptionHandler {
         response.put("error", "Internal Server Error");
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CardNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFound(
+            CardNotFoundException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(InvalidCardStatusException.class)
+    public ResponseEntity<Map<String, String>> handleConflict(
+            InvalidCardStatusException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
     }
 }

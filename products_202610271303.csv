@@ -1,0 +1,5 @@
+"product_id","name","type"
+100000,Tarjeta Santander Prime,CREDIT
+100001,Cuenta de Ahorro Básica,DEBIT
+100003,Cuenta de Ahorros Premium,DEBIT
+100002,Tarjeta de Crédito Santander Oro,CREDIT

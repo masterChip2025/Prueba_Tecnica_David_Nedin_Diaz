@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tarjeta.santander.pruebatarjetasantander.dto.CardRequestDTO;
 import tarjeta.santander.pruebatarjetasantander.dto.CardResponseDTO;
+import tarjeta.santander.pruebatarjetasantander.dto.CardStatusResponseDTO;
 import tarjeta.santander.pruebatarjetasantander.dto.GetCardResponseDTO;
+import tarjeta.santander.pruebatarjetasantander.exception.CardNotFoundException;
+import tarjeta.santander.pruebatarjetasantander.exception.InvalidCardStatusException;
 import tarjeta.santander.pruebatarjetasantander.model.Card;
 import tarjeta.santander.pruebatarjetasantander.model.CardStatus;
 import tarjeta.santander.pruebatarjetasantander.model.Product;
@@ -19,7 +22,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class CardService {
+public class CardService implements ICardService {
 
     @Autowired
     private CardRepository cardRepository;
@@ -52,19 +55,27 @@ public class CardService {
     }
 
     @Transactional
-    public void activateCard(Integer cardId) {
+    @Override
+    public CardStatusResponseDTO activateCard(Integer cardId) {
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Tarjeta no encontrada"));
+                .orElseThrow(() -> new CardNotFoundException(cardId));
 
-        if ("ACTIVE".equals(card.getStatus())) {
-            throw new IllegalStateException("La tarjeta ya se encuentra activa.");
+        if (card.getStatus() == CardStatus.ACTIVE) {
+            return modelMapper.map(card, CardStatusResponseDTO.class);
         }
-        if ("BLOCKED".equals(card.getStatus())) {
-            throw new IllegalStateException("No se puede activar una tarjeta bloqueada.");
+        if (card.getStatus() == CardStatus.BLOCKED) {
+            throw new InvalidCardStatusException(
+                    "No es posible activar una tarjeta BLOCKED");
         }
 
-        card.setStatus(CardStatus.ISSUED);
-        cardRepository.save(card);
+        if (card.getStatus() != CardStatus.ISSUED) {
+            throw new InvalidCardStatusException(
+                    "Estado inválido para activar la tarjeta");
+        }
+
+        card.setStatus(CardStatus.ACTIVE);
+        Card savedCard = cardRepository.save(card);
+        return modelMapper.map(savedCard, CardStatusResponseDTO.class);
     }
 
     @Transactional
